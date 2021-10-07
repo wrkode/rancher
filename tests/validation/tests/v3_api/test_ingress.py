@@ -302,7 +302,7 @@ def test_ingress_upgrade_target():
                             rules=[rule])
     validate_ingress(namespace["p_client"], namespace["cluster"],
                      [workload], host, path)
-    con["environment"] = {"test1": "value1"}
+    con["env"] = {"test1": "value1"}
     workload = p_client.update(workload, containers=[con])
     wait_for_pods_in_workload(p_client, workload, pod_count=2)
     validate_workload(p_client, workload, "deployment", ns.name, pod_count=2)
@@ -359,7 +359,7 @@ def test_ingress_rule_with_only_host():
                      [workload], host, "/service1.html")
 
 
-def test_ingress_xip_io():
+def test_ingress_sslip_io():
     p_client = namespace["p_client"]
     ns = namespace["ns"]
     cluster = namespace["cluster"]
@@ -373,7 +373,7 @@ def test_ingress_xip_io():
     validate_workload(p_client, workload, "daemonSet", ns.name,
                       len(get_schedulable_nodes(cluster)))
     path = "/name.html"
-    rule = {"host": "xip.io",
+    rule = {"host": "sslip.io",
             "paths": [{"path": path,
                        "workloadIds": [workload.id],
                        "targetPort": TEST_IMAGE_PORT}]}
@@ -398,7 +398,7 @@ def test_rbac_ingress_create(role):
     p_client = get_project_client_for_token(project, token)
     name = random_test_name("default")
 
-    host = "xip.io"
+    host = "sslip.io"
     rule = {"host": host,
             "paths": [{"workloadIds": [workload.id],
                        "targetPort": TEST_IMAGE_PORT}]}
@@ -433,7 +433,7 @@ def test_rbac_ingress_edit(role):
     p_client_for_c_owner = get_project_client_for_token(project, c_owner_token)
     p_client = get_project_client_for_token(project, token)
 
-    host = "xip.io"
+    host = "sslip.io"
     path = "/name.html"
     rule_1 = {"host": host,
               "paths": [{"workloadIds": [workload.id],
@@ -474,7 +474,7 @@ def test_rbac_ingress_delete(role):
     p_client = get_project_client_for_token(project, token)
     name = random_test_name("default")
 
-    host = "xip.io"
+    host = "sslip.io"
     rule = {"host": host,
             "paths": [{"workloadIds": [workload.id],
                        "targetPort": TEST_IMAGE_PORT}]}
