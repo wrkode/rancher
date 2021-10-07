@@ -11,6 +11,7 @@ import ast
 import paramiko
 import rancher
 import pytest
+from packaging import version
 from urllib.parse import urlparse
 from rancher import ApiError
 from lib.aws import AmazonWebServices
@@ -2978,3 +2979,21 @@ def update_and_validate_kdm(kdm_url, admin_token=ADMIN_TOKEN,
     kdm_refresh_url = rancher_api_url + "/kontainerdrivers?action=refresh"
     response = requests.post(kdm_refresh_url, verify=False, headers=header)
     assert response.ok
+
+def is_version_greater_than_v25():
+    # Checks if rancher version is greater than v2.5
+    # eg: v2.5-head, v2.5 etc.
+
+    rancher_version = get_setting_value_by_name('server-version')
+
+    version_check = False
+    if rancher_version.startswith('v'):
+        if "head" in rancher_version:
+            rancher_version = ''.join(rancher_version.split("-")[0])
+        else:
+            rancher_version = '.'.join(rancher_version.split(".")[:2])
+
+    if version.parse(rancher_version) > version.parse('v2.5'):
+        version_check = True
+
+    return version_check
