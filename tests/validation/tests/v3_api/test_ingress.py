@@ -50,7 +50,8 @@ rbac_role_list = [
                   PROJECT_MEMBER,
                   PROJECT_READ_ONLY
                  ]
-
+domain_ip_v25 = "xip.io"
+domain_ip_v26 = "sslip.io"
 
 def test_ingress():
     p_client = namespace["p_client"]
@@ -378,12 +379,12 @@ def test_ingress_ip_domain():
                       len(get_schedulable_nodes(cluster)))
     path = "/name.html"
     if(is_version_greater_than_v25()):
-        rule = {"host": "sslip.io",
+        rule = {"host": domain_ip_v26,
                 "paths": [{"path": path,
                         "workloadIds": [workload.id],
                         "targetPort": TEST_IMAGE_PORT}]}
     else:
-        rule = {"host": "xip.io",
+        rule = {"host": domain_ip_v25,
             "paths": [{"path": path,
                     "workloadIds": [workload.id],
                     "targetPort": TEST_IMAGE_PORT}]}
@@ -410,9 +411,9 @@ def test_rbac_ingress_create(role):
     name = random_test_name("default")
 
     if(is_version_greater_than_v25()):
-        host = "sslip.io"
+        host = domain_ip_v26
     else:
-        host = "xip.io"
+        host = domain_ip_v25
     rule = {"host": host,
             "paths": [{"workloadIds": [workload.id],
                        "targetPort": TEST_IMAGE_PORT}]}
@@ -448,9 +449,9 @@ def test_rbac_ingress_edit(role):
     p_client = get_project_client_for_token(project, token)
 
     if(is_version_greater_than_v25()):
-        host = "sslip.io"
+        host = domain_ip_v26
     else:
-        host = "xip.io"
+        host = domain_ip_v25
     path = "/name.html"
     rule_1 = {"host": host,
               "paths": [{"workloadIds": [workload.id],
@@ -492,9 +493,9 @@ def test_rbac_ingress_delete(role):
     name = random_test_name("default")
 
     if(is_version_greater_than_v25()):
-        host = "sslip.io"
+        host = domain_ip_v26
     else:
-        host = "xip.io"
+        host = domain_ip_v25
     rule = {"host": host,
             "paths": [{"workloadIds": [workload.id],
                        "targetPort": TEST_IMAGE_PORT}]}
